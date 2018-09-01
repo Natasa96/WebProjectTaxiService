@@ -45,19 +45,18 @@
     </style>
 
     <meta charset="utf-8" />
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="~/Scripts/MyLoginScript.js"></script>
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $('document').ready(function () {
             $('#login').click(function () {
                 var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                window.location.replace(path + "LogIn");
+                window.location.replace(path + "Home/LogIn");
             });
             $('#register').click(function(){
                 var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                window.location.replace(path + "Registration");
+                window.location.replace(path + "Home/Registration");
             });
         });
     </script>
@@ -65,10 +64,10 @@
 <body>
     <h2>Welcome to TaxiService</h2>
     <div class="split left">
-        <button class="btn button" type="submit" id="login">LogIn</button> 
+        <button class="btn button" type="button" id="login">LogIn</button> 
     </div>
     <div class="split right">
-        <button class="btn button" type="submit" id="register">Register</button>
+        <button class="btn button" type="button" id="register">Register</button>
     </div>
 </body>
 </html>

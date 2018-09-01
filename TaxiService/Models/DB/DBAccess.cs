@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
-
+using TaxiService.Models.DB;
 
 namespace TaxiService.Models
 {
@@ -28,5 +28,6 @@ namespace TaxiService.Models
         public virtual DbSet<Automobil> AutomobilDB { get; set; }
         public virtual DbSet<Voznja> VoznjaDB { get; set; }
         public virtual DbSet<Lokacija> LokacijaDB { get; set; }
+        public virtual DbSet<LogIn> UsersDB { get; set; }
     }
 }

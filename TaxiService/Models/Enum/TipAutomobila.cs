@@ -5,9 +5,10 @@ using System.Web;
 
 namespace TaxiService.Models
 {
-    public enum TipAutomobila
+    public class TipAutomobila
     {
-        PUTNICKI,
-        KOMBI
+        public const string Kombi = "Kombi";
+        public const string Putnicki = "Putnicki";
+        public const string Not = "Nista od ponudjenog";
     }
 }
