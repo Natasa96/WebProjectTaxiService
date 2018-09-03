@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,13 +9,14 @@ namespace TaxiService.Models
 {
     public class Komentar
     {
-        int ID { get; set; } //nevidljivi id za prepoznavanje
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
 
-        string Opis { get; set; }
-        DateTime Datum { get; set; }
-        int OcenaVoznje { get; set; }
+        public string Opis { get; set; }
+        public string Datum { get; set; }
+        public int OcenaVoznje { get; set; }
 
-        Korisnik K { get; set; }    //korisnik koji je ostavio komentar (da li cu moci da ga kastujem u vozaca a da svi parametri ostanu?)
-        Voznja V { get; set; }      //voznja na koju je ostavljen komentar
+        public int VoznjaID { get; set; }           //id voznje na koju se odnosi komentar
+        public string Komentarisao { get; set; }    //ko je ostavio komentar
     }
 }

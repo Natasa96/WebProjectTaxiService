@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,20 +9,20 @@ namespace TaxiService.Models
 {
     public class Voznja
     {
-        int ID { get; set; }    //id preko kojeg cu prepoznavati voznju
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }    //id preko kojeg cu prepoznavati voznju
 
-        string Datum { get; set; }
-        string Vreme { get; set; }
-        Lokacija LGde { get; set; }
-        Lokacija Odrediste { get; set; }
-        double Iznos { get; set; }
+        public string VremeNarudzbe { get; set; }
+        public Lokacija LGde { get; set; }      //lokacija gde dolazi taxi
+        public Lokacija Odrediste { get; set; }
+        public double Iznos { get; set; }
 
-        TipAutomobila Tip { get; set; }
-        StatusVoznje Status { get; set; }
+        public string TipA { get; set; }
+        public string StatusVoznje { get; set; }
 
-        Musterija m { get; set; }
-        Dispecer d { get; set; }
-        Vozac v { get; set; }
-        Komentar k { get; set; }
+        public int mID { get; set; }        //id musterije
+        public int dID { get; set; }        //id dispecera
+        public int vID { get; set; }        //id vozaca
+        public int kID { get; set; }        //id komentara
     }
 }

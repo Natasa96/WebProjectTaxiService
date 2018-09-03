@@ -60,4 +60,3 @@ D:\FAX\WEB\TaxiService\TaxiService\bin\System.Web.WebPages.Razor.xml
 D:\FAX\WEB\TaxiService\TaxiService\bin\Antlr3.Runtime.pdb
 D:\FAX\WEB\TaxiService\TaxiService\obj\Debug\TaxiService.dll
 D:\FAX\WEB\TaxiService\TaxiService\obj\Debug\TaxiService.pdb
-D:\FAX\WEB\TaxiService\TaxiService\obj\Debug\TaxiService.csprojResolveAssemblyReference.cache

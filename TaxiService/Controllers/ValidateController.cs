@@ -43,8 +43,8 @@ namespace TaxiService.Controllers
                             DateTime.Now.AddMinutes(15),
                             false,
                             userData);
-                        string encTicket = FormsAuthentication.Encrypt(aTicket);                                //wtf is this?
-                        HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
+                        string encTicket = FormsAuthentication.Encrypt(aTicket);                                //za coockie, da ostanemo ulogovani
+                        HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);   //i ako idemo back/forward
                         HttpContext.Current.Response.Cookies.Add(faCookie);
                         return Ok();
                     }
