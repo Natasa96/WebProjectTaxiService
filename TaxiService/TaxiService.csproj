@@ -159,9 +159,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Taxi\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
@@ -197,7 +195,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TaxiController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValidateController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
@@ -325,9 +323,9 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Users\MusterijaView.cshtml" />
-    <Content Include="Views\Users\DispecerView.cshtml" />
-    <Content Include="Views\Users\VozacView.cshtml" />
+    <Content Include="Views\Main\MusterijaView.cshtml" />
+    <Content Include="Views\Main\DispecerView.cshtml" />
+    <Content Include="Views\Main\VozacView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

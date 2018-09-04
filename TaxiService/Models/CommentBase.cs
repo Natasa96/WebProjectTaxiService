@@ -7,16 +7,16 @@ using System.Web;
 
 namespace TaxiService.Models
 {
-    public class Komentar
+
+    public class CommentBase
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public string Opis { get; set; }
-        public string Datum { get; set; }
-        public int OcenaVoznje { get; set; }
-
-        public int VoznjaID { get; set; }           //id voznje na koju se odnosi komentar
-        public string Komentarisao { get; set; }    //ko je ostavio komentar
+        public String Summary { get; set; }
+        public String CommentDate { get; set; }
+        public String OriginalPoster { get; set; }
+        public int RideID { get; set; }
+        public int Stars { get; set; }
     }
 }

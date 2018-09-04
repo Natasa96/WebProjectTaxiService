@@ -7,15 +7,15 @@ using System.Web;
 
 namespace TaxiService.Models
 {
-    public class Automobil
+    public class CarBase
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
-        public int GodisteAutomobila { get; set; }
-        public string Registracija { get; set; }   
-        public int BrojTaxija { get; set; }    
-        public int VozacID { get; set; }
-        public string TipA { get; set; }
+        public int OwnerID { get; set; }
+        public int CarAge { get; set; }
+        public String CarRegistration { get; set; }
+        public int TaxiCarID { get; set; }
+        public String CarType { get; set; }
     }
 }

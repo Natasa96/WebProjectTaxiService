@@ -7,12 +7,11 @@ using System.Web;
 
 namespace TaxiService.Models
 {
-    public class Musterija : Korisnik
+    public class Client : UserBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int ID { get; set; }
 
-        public Musterija() : base() { }     //what?
+        public Client() : base() { }
     }
 }

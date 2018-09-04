@@ -7,11 +7,11 @@ using System.Web;
 
 namespace TaxiService.Models
 {
-    public class Dispecer : Korisnik
+    public class BanBase
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override int ID { get; set; }    //id za prepoznavanje
+        public int ID { get; set; }
 
-        public Dispecer() : base() { }
+        public String Username { get; set; }
     }
 }

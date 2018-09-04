@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TaxiService.Models.Security
 {
-    public interface ICustomPrinciple : IPrincipal
+    public interface ICustomPrincipal : IPrincipal
     {
         int ID { get; set; }
         string Username { get; set; }

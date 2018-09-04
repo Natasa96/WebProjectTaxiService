@@ -1,0 +1,269 @@
+﻿@using TaxiService.Models
+
+<html>
+<head>
+    <style>
+        h2 {
+            color: floralwhite;
+            text-align: center;
+            font-size: large;
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+        }
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+        }
+
+        .left {
+            left: 0%;
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+        }
+
+        .right {
+            right: 0%;
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+        }
+
+        .button {
+            background-color: floralwhite;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            font-size: x-large;
+            border-radius: 8px;
+            border: none;
+            padding: 14px 40px;
+            position: absolute;
+            top: 40%;
+            left: 40%;
+        }
+
+            .button:hover {
+                background-color: lightslategray;
+                color: floralwhite;
+            }
+    </style>
+
+    <meta charset="utf-8" />
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $('document').ready(function () {
+
+            function GenerateRides(){
+                $.get("api/User/getRides", function(data, status){
+                    let prikaziV = "<div class=row>";
+                    for(item in data){
+                        prikaziV += `<div class=form-group>RideID: <input disabled id="RideID_${data[item].ID}" value="${data[item].ID}"/></div>`;
+                        prikaziV += `<table><tr><td>Status</td><td>Lokacija</td><td>Destinacija</td><td>Cena</td></tr>`;
+                        prikaziV += `<tr><td>${data[item].status}</td><td>${data[item].LGde.ImeUlice} ${data[item].LGde.Mesto} ${data[item].LGde.PostanskiBr}</td><td>${data[item].Odrediste.ImeUlice} ${data[item].Odrediste.Mesto} ${data[item].Odrediste.PostanskiBr}</td><td>${data[item].Iznos}</td><td><div id=otkaziBtn ${data[item].ID}></div></td></tr></table>`;
+                        prikaziV += `<div id="Komentari${data[item].ID}"></div></div><br/><br/><br/>`                        
+                    }
+                    prikaziV += `</div>`;
+                    $('#taxiOrders').html(prikaziV);
+                    for(item in data){
+                        let trenutniKOm = `#Komentari${data[item].ID}`;
+                        let trenutnaOpcija = `#otkaziBtn${data[itme].ID}`;
+                        let btnHtml = "";
+                        if(data[item].StatusVoznje == "KREIRANA"){
+                            btnHtml += `<button id="CancelBtn" name="${data[item].ID}" class="btn btn-default">Otkazi</button>`;
+                            $(trenutnaOpcija).html(btnHtml);
+                        }
+                        $.get("api/User/" + data[item].ID, function(komData, status){
+                            if(komData.Komentarisao != undefined){
+                                let commDiv = `<div><div>Komentar</div>`;
+                                commDiv += `<div><table><caption>${komData.Komentarisao}</caption>`;
+                                commDiv += `<tr><td>Komentar</td><td><textarea readonly>${komData.Opis}</textarea></td></td>`;
+                                commDiv += `<tr><td>Ocena: </td><td>${komData.OcenaVoznje}</td></tr></table>`;
+                                commDiv += `<p>${komData.Datum}</p></div></div>`;
+                                $(trenutniKOm).html(commDiv);
+                            }
+                            else{
+                                if(data[item].StatusVoznje == "FORMIRANA"){
+                                    let komForm = `<div><div>Komentar</div>`;
+                                    let komID = data[item].ID;
+                                    komForm += `<div><textarea cols="40" rows="5" type="text" id="com_${komID}" name="commText"></textarea></div>`;
+                                    komForm += `<div><input type="submit" name="${komID}" id="successful"/><label>Ocena:</label><input id="stars_${komID}" type="number" required min="1" maxlength="1" max="5" range="1"/></div></div>`;
+                                    $('#Komentari' + komID).html(komForm);
+                                }
+                                if(data[item].StatusVoznje == "OTKAZANA"){
+                                    let komForm = `<div><div>Komentar</div>`;
+                                    let komID = data[item].ID;
+                                    komForm += `<div><textarea cols="40" rows="5" type="text" id="com_${komID}" name="commText"></textarea></div>`;
+                                    komForm += `<div><input type="submit" name="${komID}" id="canceled"/><label>Ocena:</label><input id="stars_${komID}" type="number" required min="1" maxlength="1" max="5" range="1"/></div></div>`;
+                                    $('#Komentari' + komID).html(komForm);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            $(document).on('click', '#applyFilter', function(){
+                let data = {
+                    FilterStatus: $('#statusFilter').val(),
+                    SortDate: $('#sortDate').val(),
+                    SortStars: $('#sortStars').val(),
+                    FromDate: $('#fromDate').val(),
+                    ToDate: $('#toDate').val(),
+                    FromStars: $('#fromStars').val(),
+                    ToStars: $('#toStars').val(),
+                    FromPrice: $('#fromPrice').val(),
+                    ToPrice: $('#toPrice').val(),
+                    FirstNameV: $('#fnVozac').val(),
+                    LastNameV: $('#lnVozac').val(),
+                    FirstNameM: $('#fnMusterija').val(),
+                    LastNameM: $('#lnMusterija').val()
+            }
+            $.post("api/User/", data)
+                .done(function(){
+                    GenerateRides();
+                });
+            });
+            
+        $(document).on('load', function(){
+            GenerateRides();
+        });
+
+            $('#update').click(function () {
+                let data = {
+                    kIme: $('#inputsername').val(),
+                    Lozinka: $('#inputPassword').val(),
+                    Ime: $('#inputName').val(),
+                    Prezime: $('#inputLastname').val(),
+                    Pol: $('#gender').val(),
+                    Jmbg: $('#inputJmbg').val(),
+                    Telefon: $('#inputTelefon').val(),
+                    Email: $('#inputEmail').val()
+                }
+                $.post("api/User/Update", data)
+                    .done(function () {
+                        alert("Promene uspesno sacuvane")
+                    })
+                    .fail(function () {
+                        alert("Error at updating user")
+                    });
+            });
+            
+            $('p').click(function () {
+                var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                window.location.replace(path + "Main/MusterijaView");
+            });
+
+            $('logoff').click(function(){
+                $.post("api/User/LogOff")
+                    .done(function(){
+                        var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                        window.location.replace(path + "Home/Index");
+                    })
+                    .fail(function(){
+                        alert("Error")
+                    });
+            });
+
+            $('#rides').click(function(){
+                GenerateRides();
+            });
+
+            $(document).on('click', '#CancelBtn', function () {
+                let CommentForm = `<div style="border-style: inset;left: 30px"><div>Comment</div>`;
+                let CommentID = $(this).attr('name');
+                CommentForm += `<div><textarea cols="40" rows="5" type="text" id="Com_${CommentID}" name="CommentText"></textarea></div>`;
+                CommentForm += `<div><input type="submit" name="${CommentID}" id="CancelCommentID"/><label>Stars:</label> <input id="starField_${CommentID}" type="number" required="required" min="1" maxlength="1" max="5" range="1"</div></div>`;
+                $('#CommentSection' + CommentID).html(CommentForm);
+            });
+
+            $(document).on('click', '#SuccessfulCommentID', function () {
+                let data = {
+                    ID: $(this).attr('name'),
+                    Opis: $('#Com_' + $(this).attr('name')).val(),
+                    OcenaVoznje: $('#starField_' + $(this).attr('name')).val()
+                }
+                $.post("/api/Client/addComment", data)
+                    .done(function (data) {
+                        GenerateRides();
+                    });
+            });
+
+            $(document).on('click', '#CancelCommentID', function () {
+                let data = {
+                    ID: $(this).attr('name'),
+                    Summary: $('#Com_' + $(this).attr('name')).val(),
+                    Stars: $('#starField_' + $(this).attr('name')).val()
+                }
+                $.post("/api/Client/CancelRide" + data.ID);
+                $.post("/api/Client/addComment", data)
+                    .done(function (data) {
+                        GenerateRides();
+                    });
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <button class="accordion" id="profil">Vas profil</button>
+    <div class="panel">
+        <div class="form-group">
+            <button class="btn btn" id="p">Moj profil</button>
+            <button class="btn btn" id="logoff">Log Off</button>
+        </div>
+
+        <div class="form-group">
+            <label>Korisnicko ime:</label>
+            <input type="text" class="form-control" id="inputUsername" value="@Model.kIme" readonly disabled/>
+        </div>
+        <div class="form-group">
+            <label>Lozinka:</label>
+            <input type="password" class="form-control" id="inputPassword" value="@Model.Lozinka"/>
+        </div>
+        <div class="form-group">
+            <label>Ime:</label>
+            <input type="text" class="form-control" id="inputName" value="@Model.Ime"/>
+        </div>
+        <div class="form-group">
+            <label>Prezime:</label>
+            <input type="text" class="form-control" id="inputLastname" value="@Model.Prezime"/>
+        </div>
+        <div class="form-group">
+            <label>Pol:</label>
+            &emsp;
+            <select type="number" name="gender" id="gender" class="form-control input-sm" placeholder="Gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>JMBG:</label>
+            <input type="text" class="form-control" id="inputJmbg" value="@Model.Jmbg"/>
+        </div>
+        <div class="form-group">
+            <label>Kontakt telefon:</label>
+            <input type="number" class="form-control" id="inputTelefon" value="@Model.Telefon"/>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" id="inputEmail" value="@Model.Email"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Izmeni" id="update" name="update"/>
+            @Html.ActionLink("Back", "Index", "Main", new { @class="btn btn"})
+        </div>
+    </div>
+
+    <button class="accordion" id="rides">Vase voznje</button>
+    <div class="panel">
+        
+    </div>
+
+
+    <button class="accordion">Narucite voznju</button>
+    <div class="panel">
+        <p>Lorem ipsum...</p>
+    </div>
+
+</body>
+</html>

@@ -5,15 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace TaxiService.Models.DB
+namespace TaxiService.Models
 {
-    public class LogIn
+    public class Dispacher : UserBase
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public override int ID { get; set; }
 
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Role { get; set; }
+        public Dispacher() : base() { }
     }
 }
