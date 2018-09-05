@@ -1,11 +1,10 @@
 ﻿<html>
 <head>
     <style>
-        h2{
-            color: floralwhite;
-            text-align: center;
-            font-size: large;
-            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+        .container{
+            background-color:floralwhite;
+            color:lightslategray;
+            font-size: x-large;
         }
 
         .split{
@@ -24,21 +23,22 @@
             background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
         }
 
-        .button{
+        button{
             background-color:floralwhite;
             color:lightslategray;
             text-align: center;
             text-decoration: none;
-            font-size: x-large;
+            font-size: 24px;
+
             border-radius:8px;
             border: none;
-            padding: 14px 40px;
 
             position: absolute;
             top: 40%;
             left: 40%;     
         }
-        .button:hover{
+
+        button:hover{
             background-color: lightslategray;
             color: floralwhite;
         }
@@ -52,22 +52,24 @@
         $('document').ready(function () {
             $('#login').click(function () {
                 var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                window.location.replace(path + "Home/LogIn");
+                window.location.replace(path + "Home/Login");
             });
             $('#register').click(function(){
                 var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                window.location.replace(path + "Home/Registration");
+                window.location.replace(path + "Home/Register");
             });
         });
     </script>
 </head>
 <body>
-    <h2>Welcome to TaxiService</h2>
-    <div class="split left">
-        <button class="btn button" type="button" id="login">LogIn</button> 
-    </div>
-    <div class="split right">
-        <button class="btn button" type="button" id="register">Register</button>
+    <div class="container">
+        <h1>Welcom to taxi service</h1>
+        <div class="split left">
+            <button class="btn btn-lg" type="button" id="login">LogIn</button>
+        </div>
+        <div class="split right">
+            <button class="btn btn-lg" type="button" id="register">Register</button>
+        </div>
     </div>
 </body>
 </html>

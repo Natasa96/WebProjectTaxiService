@@ -14,6 +14,8 @@ namespace TaxiService.Controllers
 {
     public class TaxiController : Controller
     {
+        private static DataAccess DB = DataAccess.CreateDb();
+
         public CustomPrincipal AuthUser
         {
             get
@@ -28,7 +30,7 @@ namespace TaxiService.Controllers
                 }
             }
         }
-        private static DataAccess DB = DataAccess.CreateDb();
+
         // GET: Taxi
         [Authorize]
         public ActionResult Index()
@@ -51,16 +53,19 @@ namespace TaxiService.Controllers
             }
 
         }
+
         [Authorize]
         public ActionResult U()
         {
             return View("Profile", getUserFromDB());
         }
+
         [Authorize]
         public ActionResult OrderRide()
         {
             return View();
         }
+
         [Authorize]
         public ActionResult AddDriver()
         {
@@ -85,6 +90,7 @@ namespace TaxiService.Controllers
         {
             return View();
         }
+
         [Authorize]
         public ActionResult SetLocation()
         {

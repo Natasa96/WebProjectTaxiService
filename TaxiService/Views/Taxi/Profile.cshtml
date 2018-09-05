@@ -1,0 +1,234 @@
+﻿@model TaxiService.Models.UserBase
+@{
+    ViewBag.Title = "Profile";
+}
+<html>
+<head>
+
+    <style>
+       body#Profile {
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding: 10px;
+        }
+
+        hr{
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 1px;
+        }
+
+        select, input[type=text], input[type=number], input[type=password], input[type=email]{
+            width: 50%;
+            padding: 12px 28px;
+            display: inline-block;
+
+            border-radius: 8px;
+        }
+
+        input[type=submit]{
+            background-color: floralwhite;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 8px;
+
+            padding: 14px 40px;
+            width: 50%;
+        }
+
+        input[type=submit]:hover{
+            background-color:lightslategray ;
+        }
+
+        span{
+            font-family: Calibri;
+            font-size: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px 20px;
+            overflow: hidden;
+            background-color: floralwhite;
+        }
+
+        li {
+            float: left;
+        }
+
+        button, a {
+            background-color: transparent;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            border:none;
+            display:inline-block;
+
+            font-size:20px;
+            font-family:Calibri;
+        }
+
+    </style>
+
+    <meta charset="utf-8" />
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
+    <script type="text/javascript">
+        $('document').ready(function () {
+            $('#change').click(function () {
+                let data = {
+                    Username: $('#username').val(),
+                    Password: $('#password').val(),
+                    Firstname: $('#firstname').val(),
+                    Lastname: $('#lastname').val(),
+                    JMBG: $('#jmbg').val(),
+                    ContactPhone: $('#contactphone').val(),
+                    Email: $('#email').val(),
+                    Gender: $('#gender').val(),
+                    Role: $('#role').val()
+                }
+
+                $.post("/api/Default/CheckRole")
+                    .done(function(role){
+                        if(role == "Client"){
+                            $.post("/api/Client/Update", data)
+                                .done(function () {
+                                    alert("Changes saved")
+                                })
+                                .fail(function () {
+                                    alert("Error occured")
+                                });
+                        }
+                        else if(role == "Dispacher"){
+                            $.post("/api/Dispacher/Update", data)
+                                .done(function () {
+                                    alert("Changes saved")
+                                })
+                                .fail(function () {
+                                    alert("Error occured")
+                                });
+                        }
+                        else if(role == "Driver"){
+                            $.post("/api/Driver/Update", data)
+                                .done(function () {
+                                    alert("Changes saved")
+                                })
+                                .fail(function () {
+                                    alert("Error occured")
+                                });
+                        }
+                        else
+                            alert("Error");
+                    });
+
+            });
+
+            $('#logoff').click(function () {
+                $.post("/api/Driver/Logoff")
+                    .done(function () {
+                        var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                        window.location.replace(path + "Home");
+                    })
+                    .fail(function () {
+                        alert("Error occured")
+                    });
+            });
+            $('#profile').click(function () {
+                var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                window.location.replace(path + "Taxi/U");
+            });
+
+        });
+    </script>
+</head>
+<body id="Profile">
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <ul>
+        <li><a href="~/Taxi/Index">Home</a></li>
+        <li><button id="profile">My Profile</button></li>
+        <li><button id="logoff">Log Off</button></li>
+    </ul>
+</div>
+    <div class="container" align="center">
+        <h1 style="font-family:Calibri">Profile</h1>
+        <hr />
+        <br/><br/>
+        <div class="panel-body">
+            <div class="form-group">
+                <span>
+                    Username:
+                    <input type="text" id="username" name="username" value="@Model.Username" readonly="readonly" disabled="disabled" />
+                </span>
+            </div>
+            <br />
+            <div class="form-group">
+                <span>
+                    Password:
+                    <input type="password" id="password" name="password" value="@Model.Password" />
+                </span>
+                </div>
+            <br />
+            <div class="form-group">
+                <span>
+                    Firstname:
+                    <input type="text" id="firstname" name="firstname" value="@Model.Firstname" />
+                </span>
+            </div>
+            <br />
+            <div class="col-md-10">
+                <span>
+                    Lastname:
+                    <input type="text" id="lastname" name="lastname" value="@Model.Lastname" />
+                </span>
+                </div>
+            <br />
+            <div class="col-md-10">
+                <span>
+                    Gender:
+                    <select id="gender" name="gender" autofocus="@Model.Gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </span>
+            </div>
+            <br />
+            <div class="col-md-10">
+                <span>
+                    JMBG:
+                    <input type="text" id="jmbg" name="jmbg" value="@Model.JMBG" />
+                </span>
+            </div>
+            <br />
+            <div class="col-md-10">
+                <span>
+                    ContactPhone:
+                    <input type="number" id="contactphone" name="contactphone" value="@Model.ContactPhone" />
+                </span>
+            </div>
+            <br />
+            <div class="col-md-10">
+                <span>
+                    Email:
+                    <input type="text" id="email" name="email" value="@Model.Email" />
+                </span>
+            </div>
+            <br/>
+            <div class="col-md-10">
+                <input hidden="hidden" type="text" id="role" name="role" value="Client" readonly="readonly" disabled="disabled" />
+            </div>
+            <br/><br/><hr/>
+            <div class="col-md-10">
+                <input type="submit" value="Change" id="change" name="change" />
+                @Html.ActionLink("Go back", "Index", "Taxi", new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,1 +1,358 @@
 ﻿
+@{
+    ViewBag.Title = "Index";
+}
+<html>
+<head>
+    <style>
+         body#Dispacher {
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding: 10px;
+        }
+
+        input, select{
+            width: 50%;
+            padding: 10px 24px;
+            display: inline-block;
+
+            border-radius: 8px;
+        }
+
+        button, a{
+            background-color: floralwhite;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+
+            border-radius: 8px;
+            padding: 10px 24px;
+            width: 50%;
+        }
+
+
+        hr{
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 1px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px 20px;
+            overflow: hidden;
+            background-color: floralwhite;
+        }
+
+        li {
+            float: left;
+        }
+
+        span{
+            font-family: Calibri;
+            font-size: 18px;
+        }
+
+        .btn{
+            background-color: transparent;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            border:none;
+            display:inline-block;
+
+            font-size:18px;
+            font-family:Calibri;
+            border:none;
+            padding: 10px 20px;
+        }
+
+    </style>
+
+    <meta charset="utf-8" />
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            function LoadRides() {
+                $.get("/api/Dispacher/getRides", function (data, status) {
+                    let displayRides = "<div class=row>";
+                    for (item in data) {
+                        displayRides += `<div style="border-style: groove"><div style="border-style: outset">RideID: <input disabled="disabled" id="RideID_${data[item].ID}" value ="${data[item].ID}"/></div>`;
+                        displayRides += `<table><tr><td style="padding:0 15px 0 15px;">Status</td><td style="padding:0 15px 0 15px;">Location</td><td style="padding:0 15px 0 15px;">Destination</td><td style="padding:0 15px 0 15px;">Price</td></tr>`;
+                        displayRides += `<tr><td style="padding:0 15px 0 15px;">${data[item].Status}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].Location.StreetName} ${data[item].Location.Place}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].Destination.StreetName} ${data[item].Destination.Place}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].RidePrice}</td><td style="padding:0 15px 0 15px;"></td><td style="padding:0 15px 0 15px;"></tr></table>`;
+                        displayRides += `<div id="CommentSection${data[item].ID}"></div><div id="AssignDiv${data[item].ID}"</div></div></div><br/><br/>`;
+                    }
+                    displayRides += `</div>`;
+                    $('#otherRidesDiv').html(displayRides);
+                    for (item in data) {
+                        let currentComment = `#CommentSection${data[item].ID}`;
+                        let currentAssign = `#AssignDiv${data[item].ID}`;
+                        let assignBtn = `<button id="assignDriverBtn" name="${data[item].ID}" class="btn btn-default" type="submit">Assign</button>`;
+                        let assignData = '';
+                        assignData += `<div><label>Assign Driver</label></div>`;
+                        assignData += `<div><select name="${data[item].ID}" id="SDriverID${data[item].ID}">`;
+
+                        if (data[item].Status == "Created") {
+                            $.get("/api/Dispacher/getFreeDrivers/" + data[item].ID, function (drivers, status) {
+
+                                for (node in drivers) {
+                                    assignData += `<option value="${drivers[node].ID}">${drivers[node].Firstname} ${drivers[node].Lastname}</option>`;
+                                }
+                                assignData += `</select></div>`;
+                                assignData += assignBtn;
+                                $(currentAssign).html(assignData);
+                            });
+
+                        }
+                        $.get("/api/Dispacher/getComment" + data[item].ID, function (commentData, status) {
+                            if (commentData != undefined) {
+                                let commentDiv = `<div style="border-style: inset;left: 30px"><div>Comment</div"`;
+                                commentDiv += `<div><table><caption>${commentData.OriginalPoster}</caption>`;
+                                commentDiv += `<tr><td>Comment</td><td><textarea readonly="readonly">${commentData.Summary}</textarea></td></tr>`;
+                                commentDiv += `<tr><td>Stars: </td><td>${commentData.Stars}</td></tr></table>`;
+                                commentDiv += `<p style="text-indent: 80%">${commentData.CommentDate}</p></div></div>`;
+                                $(currentComment).html(commentDiv);
+                            }
+                        });
+
+                    }
+                });
+
+
+
+                $.get("/api/Dispacher/getDispacherRides", function (data, status) {
+                    let displayRides = "<div class=row>";
+                    for (item in data) {
+                        displayRides += `<div style="border-style: groove"><div style="border-style: outset">RideID: <input disabled="disabled" id="RideID_${data[item].ID}" value ="${data[item].ID}"/></div>`;
+                        displayRides += `<table><tr><td style="padding:0 15px 0 15px;">Status</td><td style="padding:0 15px 0 15px;">Location</td><td style="padding:0 15px 0 15px;">Destination</td><td style="padding:0 15px 0 15px;">Price</td></tr>`;
+                        displayRides += `<tr><td style="padding:0 15px 0 15px;">${data[item].Status}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].Location.StreetName} ${data[item].Location.Place}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].Destination.StreetName} ${data[item].Destination.Place}</td>
+                                         <td style="padding:0 15px 0 15px;">${data[item].RidePrice}</td><td style="padding:0 15px 0 15px;"></td></tr></table>`;
+                        displayRides += `<div id="CommentSection${data[item].ID}"></div><div id="AssignDiv${data[item].ID}"</div></div></div><br/><br/>`;
+                    }
+                    displayRides += `</div>`;
+                    $('#dispacherRidesDiv').html(displayRides);
+
+                    for (item in data) {
+                        let currentComment = `#CommentSection${data[item].ID}`;
+                        let currentAssign = `#AssignDiv${data[item].ID}`;
+                        let assignData = '';
+                        var RideID= data[item].ID ;
+                        let btnHtml = "";
+                        $.get("/api/Dispacher/getComment" + data[item].ID , function (commentData, status) {
+                            if (commentData != undefined) {
+                                let commentDiv = `<div style="border-style: inset;left: 30px"><div>Comment</div"`;
+                                commentDiv += `<div><table><caption>${commentData.OriginalPoster}</caption>`;
+                                commentDiv += `<tr><td>Comment</td><td><textarea readonly="readonly">${commentData.Summary}</textarea></td></tr>`;
+                                commentDiv += `<tr><td>Stars: </td><td>${commentData.Stars}</td></tr></table>`;
+                                commentDiv += `<p style="text-indent: 80%">${commentData.CommentDate}</p></div></div>`;
+                                $(currentComment).html(commentDiv);
+                            }
+                        });
+                        if (data[item].Status == "Formated") {
+                            $.get("/api/Dispacher/getFreeDrivers/" + data[item].ID , function (drivers, status) {
+                                assignData += `<div><label>Assign Driver</label></div>`;
+                                assignData += `<div><select name="${data[item].ID}" id="SDriverID${data[item].ID}">`;
+                                for (node in drivers) {
+                                    assignData += `<option value="${drivers[node].ID}">${drivers[node].Firstname} ${drivers[node].Lastname}</option>`;
+                                }
+                                assignData += `</select></div>`;
+                                assignData += `<button id="assignDriverBtn" name="${RideID}" class="btn btn-default" type="submit">Assign</button>`;
+                                $(currentAssign).html(assignData);
+                            });
+
+                        }
+                    }
+                })
+            }
+            $(document).on('click', '#assignDriverBtn', function () {
+                let ChosenRide = $(this).attr('name');
+                let ChosenRideID = $('#SDriverID' + ChosenRide).attr('name');
+                let ChosenDriver = $('#SDriverID' + ChosenRide).val();
+
+                let data = {
+                    DriverID: ChosenDriver,
+                    RideID: ChosenRideID
+                }
+                $.post("/api/Dispacher/AssignDriver", data)
+                    .done(function (driver) {
+                        alert("Driver: " + driver + " assigned.");
+                        LoadRides();
+                    })
+                    .fail(function () {
+                        alert("Error occured while assigning the driver");
+                    });
+            });
+
+            $('#updateRides').click(function () {
+                LoadRides();
+            });
+
+            $('#profile').click(function () {
+                var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                 window.location.replace(path + "Taxi/U");
+            });
+
+            $('#logoff').click(function () {
+                $.post("/api/Dispacher/Logoff")
+                    .done(function () {
+                        var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                        window.location.replace(path + "Home");
+                    })
+                    .fail(function () {
+                        alert("Error occured")
+                    });
+            });
+
+            $(document).on('click', '#ApplyFilter', function () {
+                let Filterdata = {
+                    FilterStatus: $('#statusFilter').val(),
+                    SortDate: $('#SortDate').val(),
+                    SortGrade: $('#SortGrade').val(),
+                    FromDate: $('#FromDateSearch').val(),
+                    ToDate: $('#ToDateSearch').val(),
+                    FromGrade: $('#FromGradeSearch').val(),
+                    ToGrade: $('#ToGradeSearch').val(),
+                    FromPrice: $('#FromPriceSearch').val(),
+                    ToPrice: $('#ToPriceSearch').val(),
+                    FirstnameDriver: $('#DriverFirstnameSearch').val(),
+                    LastnameDriver: $('#DriverLastnameSearch').val(),
+                    FirstnameClient: $('#ClientFirstnameSearch').val(),
+                    LastnameClient: $('#ClientLastnameSearch').val()
+                }
+                $.post("/api/Dispacher/ApplyFilter", Filterdata)
+                    .done(function () {
+                        LoadRides();
+                    });
+            });
+
+
+
+        });
+    </script>
+
+</head>
+<body id="Dispacher">
+    <div class="container">
+        <ul>
+            <li><a class="btn" href="~/Taxi/OrderRide">Order Ride</a></li>
+            <li><a class="btn" href="~/Taxi/AddDriver">Add Driver</a></li>
+            <li><a class="btn" href="~/Taxi/ManageClients">Manage Clients</a></li>
+            <li><button class="btn" type="submit" id="updateRides">Show Rides</button></li>
+            <li><button class="btn" id="profile" style="background-color:transparent">My Profile</button></li>
+            <li><button class="btn" id="logoff" style="background-color:transparent">Log Off</button></li>
+        </ul>
+    </div>
+    <div id="container" style="font-family:Calibri; font-size:20px">
+<br /><hr />
+                <h4>Filters</h4>
+        <span>
+            Filter by status:
+            <select id="statusFilter">
+                <option value="None" selected="selected">None</option>
+                <option value="Created">Created</option>
+                <option value="Formated">Formated</option>
+                <option value="Canceled">Canceled</option>
+                <option value="Successful">Successful</option>
+                <option value="Unsuccessful">Unsuccessful</option>
+            </select>
+        </span>
+            <br />
+                <h4>Sort by:</h4>
+
+        <span>
+            Date
+            <select id="SortDate">
+                <option value="None" selected="selected">None</option>
+                <option value="Newest">Newest</option>
+                <option value="Oldest">Oldest</option>
+            </select>
+        </span>
+        <br />
+        <span>
+            Stars
+            <select id="SortGrade">
+                <option value="None" selected="selected">None</option>
+                <option value="Highest">Highest</option>
+                <option value="Lowest">Lowest</option>
+            </select>
+        </span>
+        <br /><br /><hr />
+        <h4>Search by</h4>
+        <h5>Order date:</h5>
+        <span>
+            from:
+            <input type="date" id="FromDateSearch" />
+        </span>
+        <br />
+        <span>
+            to:
+            <input type="date" id="ToDateSearch" />
+        </span>
+        <br />
+        <h5>Stars</h5>
+        <span>
+            from:
+            <input type="number" maxlength="1" max="5" min="1" id="FromGradeSearch" />
+        </span>
+        <br />
+        <span>
+            to:
+            <input type="number" max="5" min="1" maxlength="1" id="ToGradeSearch" />
+        </span>
+        <br />
+        <h5>Price</h5>
+        <span>
+            from:
+            <input type="number" id="FromPriceSearch" />
+        </span>
+        <br />
+        <span>
+            to:
+            <input type="number" id="ToPriceSearch" />
+        </span>
+        <br />
+        <h5>Client</h5>
+        <span>
+            Firstname:
+            <input type="text" id="ClientFirstnameSearch" />
+        </span>
+        <br />
+        <span>
+            Lastname:
+            <input type="text" id="ClientLastnameSearch" />
+        </span>
+        <h5>Driver</h5>
+        <span>
+            Firstname:
+            <input type="text" id="DriverFirstnameSearch" />
+        </span>
+        <br />
+        <span>
+            Lastname:
+            <input type="text" id="DriverLastnameSearch" />
+        </span>
+        <br /><br /><hr />
+            <button type="submit" id="ApplyFilter">Apply</button>
+        </div>
+        <div style="float:right; width:50%;" class="col-md-5 col-sm-push-1">
+            <h3>Dispacher Rides</h3>
+            <div id="dispacherRidesDiv"></div>
+            <h3>All Rides</h3>
+            <div id="otherRidesDiv"></div>
+        </div>
+</body>
+</html>

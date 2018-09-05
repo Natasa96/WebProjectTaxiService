@@ -1,0 +1,131 @@
+﻿<html>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <style>
+        body#RegisterForm {
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding: 10px;
+        }
+
+        hr{
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 1px;
+        }
+
+        select, input[type=text], input[type=number], input[type=password], input[type=email]{
+            width: 50%;
+            padding: 12px 28px;
+            display: inline-block;
+
+            border-radius: 8px;
+        }
+
+        input[type=submit]{
+            background-color: floralwhite;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 8px;
+
+            padding: 14px 40px;
+            width: 50%;
+        }
+
+        input[type=submit]:hover{
+            background-color:lightslategray ;
+        }
+
+    </style>
+
+
+    <meta charset="utf-8" />
+    <script type="text/javascript">
+
+        function validatephone(phone)
+        {
+            phone.value = phone.value.replace(/[^0-9-'\n\r.]+/g, '');
+        }
+        function ValidateText(txt) {
+            txt.value = txt.value.replace(/[^a-zA-Z-'\n\r.]+/g, '');
+        }
+
+
+
+        $('document').ready(function () {
+            $('#register').click(function () {
+                let data = {
+                    Username: $('#username').val(),
+                    Password: $('#password').val(),
+                    Firstname: $('#firstname').val(),
+                    Lastname: $('#lastname').val(),
+                    JMBG: $('#jmbg').val(),
+                    ContactPhone: $('#phone').val(),
+                    Email: $('#email').val(),
+                    Gender: $('#gender').val(),
+                }
+                    $.post("/api/Client/AddClient", data)
+                        .done(function (data) {
+                            alert("New user added: " + data.Username);
+                            var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                            window.location.replace(path + "Home");
+                        })
+                        .fail(function () {
+                            alert("Error cannot add data");
+                        });
+            });
+        });
+    </script>
+</head>
+<body id="RegisterForm">
+    <div class="container" align="center">
+        <h1>Please sign up</h1>
+        <hr>
+        <br /><br />
+        <div class="panel-body">
+            <div class="form-group">
+                <input type="text" name="first_name" id="firstname" onkeyup="ValidateText(this)" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <input type="text" name="last_name" id="lastname" placeholder="Last Name" onkeyup="ValidateText(this)">
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" id="email" placeholder="Email Address">
+            </div>
+            <div class="form-group">
+                <input type="text" name="username" id="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+
+            <div class="form-group">
+                <input type="number" name="jmbg" id="jmbg" placeholder="JMBG" onkeypress="validatephone(this)">
+            </div>
+            <div class="form-group">
+                <select type="number" name="gender" id="gender" placeholder="Gender">
+                    <option value="Male" selected>Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="number" name="phone" id="phone" placeholder="Phone Number" onkeyup="validatephone(this)">
+            </div>
+            <br />
+            <hr>
+            <input type="submit" value="Register" id="register">
+        </div>
+    </div>
+</body>
+</html>

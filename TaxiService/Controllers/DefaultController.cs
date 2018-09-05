@@ -28,6 +28,13 @@ namespace TaxiService.Controllers
             return Redirect(route + "Home");
         }
 
+        [HttpPost, Route("api/Default/CheckRole")]
+        public IHttpActionResult CheckRole()
+        {
+            string role = AuthUser.Role.ToString();
+            return Ok(role);
+        }
+
         [HttpPost, Route("api/Default/ValidateLogin")]
         public IHttpActionResult ValidateLogin(LoginBase data)
         {

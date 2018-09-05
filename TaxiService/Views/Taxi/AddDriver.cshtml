@@ -1,0 +1,201 @@
+﻿<html>
+<head>
+    <style>
+        body#AddDriver {
+            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding: 10px;
+        }
+
+        input, select{
+            width: 50%;
+            padding: 10px 24px;
+            display: inline-block;
+
+            border-radius: 8px;
+        }
+
+        button, a, input[type=submit]{
+            background-color: floralwhite;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+
+            border-radius: 8px;
+            padding: 10px 24px;
+            width: 50%;
+        }
+
+
+        hr{
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 1px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px 20px;
+            overflow: hidden;
+            background-color: floralwhite;
+        }
+
+        li {
+            float: left;
+        }
+
+        span{
+            font-family: Calibri;
+            font-size: 18px;
+        }
+
+        .btn{
+            background-color: transparent;
+            color: lightslategray;
+            text-align: center;
+            text-decoration: none;
+            border:none;
+            display:inline-block;
+
+            font-size:18px;
+            font-family:Calibri;
+            border:none;
+            padding: 10px 20px;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <script src="~/Scripts/jquery-3.0.0.js"></script>
+    <script type="text/javascript">
+        $(document).on('load', function () {
+            $.get("/api/Default/getCarTypes", function (data, status) {
+                let selector = `<select id="carType">`;
+                for (item in data) {
+                    selector += `<option value ="${data[item]}">${data[item]}</option>`;
+                }
+                selector += `</select>`;
+                $('#carTypesDiv').html(selector);
+            });
+        });
+
+        $('document').ready(function () {
+            $('#add').click(function () {
+                let driver = {
+                    Username: $('#username').val(),
+                    Password: $('#password').val(),
+                    Firstname: $('#firstname').val(),
+                    Lastname: $('#lastname').val(),
+                    JMBG: $('#jmbg').val(),
+                    ContactPhone: $('#contactphone').val(),
+                    Email: $('#email').val(),
+                    Gender: $('#gender').val(),
+                }
+                let car = {
+                    CarAge: $('#carAge').val(),
+                    CarRegistration: $('#carRegistration').val(),
+                    TaxiCarID: $('#taxiCarID').val(),
+                    CarType: $('#carType').val()
+                }
+                let data = {
+                    car,
+                    driver
+                }
+                $.post("/api/Dispacher/AddDriver", data)
+                    .done(function () {
+                        alert("New driver added: " + driver.Username);
+                    })
+                    .fail(function () {
+                        alert("Error cannot add data");
+                    });
+
+            });
+        });
+    </script>
+</head>
+<body id="AddDriver">
+    <div class="container" align="center" style="font-family:Calibri; font-size:20px">
+                <a class="navbar-brand" href="~/Taxi">TAXI SERVICE</a>
+        <br /><br /><hr />
+            <h3>Driver info:</h3>
+        <br />
+        <span>
+            Username:
+            <input type="text" id="username" name="username" required />
+        </span>
+        <br />
+            <span>
+                Password:
+                <input type="password" id="password" name="password" required />
+            </span>
+        <br />
+            <span>
+                Firstname:
+                <input type="text" id="firstname" name="firstname" required />
+            </span>
+        <br />
+            <span>
+                Lastname: 
+                <input type="text" id="lastname" name="lastname" required />
+            </span>
+        <br />
+            <span>
+                Gender: 
+                <select id="gender" name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </span>
+        <br />
+            <span>
+                JMBG: 
+                <input type="number" id="jmbg" name="jmbg" required />
+            </span>
+        <br />
+            <span>
+                ContactPhone:
+                <input type="number" id="contactphone" name="contactphone" required />
+            </span>
+        <br />
+            <span>
+                Email:
+                <input type="email" id="email" name="email" required />
+            </span>
+    <br /><br /><br /><hr />
+            <h3>Select drivers car:</h3>
+            <span>
+                TaxiCar ID:
+                <input type="number" id="taxiCarID" required />
+            </span>
+            <br />
+            <span>
+                Car Registration:
+                <input type="text" id="carRegistration" required />
+            </span>
+    <br />
+            <span>
+                Car Type:
+                <select id="carType">
+                    <option value="Not_Defined">Not_Defined</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="Van">Van</option>
+                </select>
+            </span>
+    <br />
+            <span>
+                Car Age(year of production):
+                <input type="number" id="carAge" required />
+            </span>
+        <br /><br /><hr />
+        <span>
+            <input type="submit" value="Add" id="add" name="add" />
+        </span>
+    </div>
+</body>
+</html>

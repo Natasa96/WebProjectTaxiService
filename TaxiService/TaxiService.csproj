@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="App_Start\AdminConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -194,31 +195,36 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\DispacherController.cs" />
+    <Compile Include="Controllers\DriverController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MainController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ValidateController.cs" />
+    <Compile Include="Controllers\TaxiController.cs" />
+    <Compile Include="Controllers\ClientController.cs" />
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Adresa.cs" />
-    <Compile Include="Models\Automobil.cs" />
-    <Compile Include="Models\DB\DBAccess.cs" />
-    <Compile Include="Models\DB\LogIn.cs" />
-    <Compile Include="Models\Dispecer.cs" />
-    <Compile Include="Models\Enum\Uloga.cs" />
-    <Compile Include="Models\Komentar.cs" />
-    <Compile Include="Models\Korisnik.cs" />
-    <Compile Include="Models\Lokacija.cs" />
-    <Compile Include="Models\Musterija.cs" />
-    <Compile Include="Models\Enum\StatusVoznje.cs" />
-    <Compile Include="Models\Enum\TipAutomobila.cs" />
+    <Compile Include="Models\AssignBase.cs" />
+    <Compile Include="Models\CarBase.cs" />
+    <Compile Include="Models\BanBase.cs" />
+    <Compile Include="Models\DB\DataAccess.cs" />
+    <Compile Include="Models\DB\LoginBase.cs" />
+    <Compile Include="Models\Dispecher.cs" />
+    <Compile Include="Models\DriverCreationBase.cs" />
+    <Compile Include="Models\Enum\UserRole.cs" />
+    <Compile Include="Models\FilterBase.cs" />
+    <Compile Include="Models\CommentBase.cs" />
+    <Compile Include="Models\UserBase.cs" />
+    <Compile Include="Models\LocationBase.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\Enum\RideStatus.cs" />
+    <Compile Include="Models\Enum\CarRole.cs" />
     <Compile Include="Models\Security\CustomPrincipal.cs" />
     <Compile Include="Models\Security\CustomPrincipalSerializeModel.cs" />
-    <Compile Include="Models\Security\ICustomPrinciple.cs" />
-    <Compile Include="Models\Vozac.cs" />
-    <Compile Include="Models\Voznja.cs" />
+    <Compile Include="Models\Security\ICustomPrincipal.cs" />
+    <Compile Include="Models\Driver.cs" />
+    <Compile Include="Models\RideBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -312,8 +318,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\LogIn.cshtml" />
-    <Content Include="Views\Home\Registration.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
@@ -323,9 +329,15 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Main\MusterijaView.cshtml" />
-    <Content Include="Views\Main\DispecerView.cshtml" />
-    <Content Include="Views\Main\VozacView.cshtml" />
+    <Content Include="Views\Taxi\ClientIndex.cshtml" />
+    <Content Include="Views\Taxi\DispacherIndex.cshtml" />
+    <Content Include="Views\Taxi\DriverIndex.cshtml" />
+    <Content Include="Views\Taxi\Profile.cshtml" />
+    <Content Include="Views\Taxi\FinishRide.cshtml" />
+    <Content Include="Views\Taxi\ManageClients.cshtml" />
+    <Content Include="Views\Taxi\OrderRide.cshtml" />
+    <Content Include="Views\Taxi\SetLocation.cshtml" />
+    <Content Include="Views\Taxi\AddDriver.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

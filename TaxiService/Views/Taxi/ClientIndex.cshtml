@@ -1,100 +1,143 @@
 ﻿@using TaxiService.Models
-
+@{
+    ViewBag.Title = "Index";
+}
 <html>
 <head>
     <style>
-        h2 {
-            color: floralwhite;
-            text-align: center;
-            font-size: large;
+
+         body#Client {
             background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            padding: 10px;
         }
 
-        .split {
-            height: 100%;
+        input, select{
             width: 50%;
-            position: fixed;
+            padding: 10px 24px;
+            display: inline-block;
+
+            border-radius: 8px;
         }
 
-        .left {
-            left: 0%;
-            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
-        }
-
-        .right {
-            right: 0%;
-            background-image: url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg");
-        }
-
-        .button {
+        button, a{
             background-color: floralwhite;
             color: lightslategray;
             text-align: center;
             text-decoration: none;
-            font-size: x-large;
+            font-size: 16px;
+
             border-radius: 8px;
-            border: none;
-            padding: 14px 40px;
-            position: absolute;
-            top: 40%;
-            left: 40%;
+            padding: 10px 24px;
+            width: 50%;
         }
 
-            .button:hover {
-                background-color: lightslategray;
-                color: floralwhite;
-            }
+
+        hr{
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 1px;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px 20px;
+            overflow: hidden;
+            background-color: floralwhite;
+        }
+
+        li {
+            float: left;
+        }
+
+        span{
+            font-family: Calibri;
+            font-size: 20px;
+        }
+
+        .btn{
+            display:inline-block;
+            font-size:20px;
+        }
+
     </style>
 
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <meta charset="utf-8" />
+    <title>Taxi Service</title>
     <script src="~/Scripts/jquery-3.0.0.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-        $('document').ready(function () {
+        $(document).ready(function () {
 
-            function GenerateRides(){
-                $.get("api/User/getRides", function(data, status){
-                    let prikaziV = "<div class=row>";
-                    for(item in data){
-                        prikaziV += `<div class=form-group>RideID: <input disabled id="RideID_${data[item].ID}" value="${data[item].ID}"/></div>`;
-                        prikaziV += `<table><tr><td>Status</td><td>Lokacija</td><td>Destinacija</td><td>Cena</td></tr>`;
-                        prikaziV += `<tr><td>${data[item].status}</td><td>${data[item].LGde.ImeUlice} ${data[item].LGde.Mesto} ${data[item].LGde.PostanskiBr}</td><td>${data[item].Odrediste.ImeUlice} ${data[item].Odrediste.Mesto} ${data[item].Odrediste.PostanskiBr}</td><td>${data[item].Iznos}</td><td><div id=otkaziBtn ${data[item].ID}></div></td></tr></table>`;
-                        prikaziV += `<div id="Komentari${data[item].ID}"></div></div><br/><br/><br/>`                        
+            $('#ToDateSearch').val(new Date().getDate().toString());
+
+            function CheckIfBanned() {
+                $.get('/api/Client/CheckIfBanned', function (data, status) {
+                if (data == true) {
+                    alert("You got banned.");
+                    $.post("/api/Client/Logoff")
+                        .done(function () {
+                            var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                            window.location.replace(path + "Home");
+                        });
+                }
+            })
+            }
+
+            function GenerateRides()
+            {
+
+                $.get("/api/Client/getRides", function (data, status) {
+                    let displayRides = "<div class=row>";
+                    for (item in data) {
+                        displayRides += `<div style="border-style: groove"><div style="border-style: outset">RideID: <input disabled="disabled" id="RideID_${data[item].ID}" value ="${data[item].ID}"/></div>`;
+                        displayRides += `<table><tr><td style="padding:0 15px 0 15px;">Status</td><td style="padding:0 15px 0 15px;">Location</td><td style="padding:0 15px 0 15px;">Destination</td><td style="padding:0 15px 0 15px;">Price</td></tr>`;
+                        displayRides += `<tr><td style="padding:0 15px 0 15px;">${data[item].Status}</td><td style="padding:0 15px 0 15px;">${data[item].Location.StreetName} ${data[item].Location.Place} ${data[item].Location.ZipCode}</td><td style="padding:0 15px 0 15px;">${data[item].Destination.StreetName} ${data[item].Destination.Place} ${data[item].Location.ZipCode}</td><td style="padding:0 15px 0 15px;">${data[item].RidePrice}</td><td style="padding:0 15px 0 15px;"><div id=otkaziBtn${data[item].ID}></div></td></tr></table>`;
+                        displayRides += `<div id="CommentSection${data[item].ID}"></div></div><br/><br/><br/><br/>`;
                     }
-                    prikaziV += `</div>`;
-                    $('#taxiOrders').html(prikaziV);
-                    for(item in data){
-                        let trenutniKOm = `#Komentari${data[item].ID}`;
-                        let trenutnaOpcija = `#otkaziBtn${data[itme].ID}`;
+                    displayRides += `</div>`;
+                    $('#taxiOrders').html(displayRides);
+                    for (item in data) {
+                        let currentComment = `#CommentSection${data[item].ID}`;
+                        let currentOption = `#otkaziBtn${data[item].ID}`;
                         let btnHtml = "";
-                        if(data[item].StatusVoznje == "KREIRANA"){
-                            btnHtml += `<button id="CancelBtn" name="${data[item].ID}" class="btn btn-default">Otkazi</button>`;
-                            $(trenutnaOpcija).html(btnHtml);
+                        if (data[item].Status == "Created") {
+                            btnHtml += `<button id="CancelBtn" name="${data[item].ID}" class="btn btn-default">Cancel</button>`;
+                            $(currentOption).html(btnHtml);
                         }
-                        $.get("api/User/" + data[item].ID, function(komData, status){
-                            if(komData.Komentarisao != undefined){
-                                let commDiv = `<div><div>Komentar</div>`;
-                                commDiv += `<div><table><caption>${komData.Komentarisao}</caption>`;
-                                commDiv += `<tr><td>Komentar</td><td><textarea readonly>${komData.Opis}</textarea></td></td>`;
-                                commDiv += `<tr><td>Ocena: </td><td>${komData.OcenaVoznje}</td></tr></table>`;
-                                commDiv += `<p>${komData.Datum}</p></div></div>`;
-                                $(trenutniKOm).html(commDiv);
+                        $.get("/api/Client/getComment" + data[item].ID, function (commentData, status) {
+                            if (commentData.OriginalPoster != undefined) {
+                                let commentDiv = `<div style="border-style: inset;left: 30px"><div>Comment</div"`;
+                                commentDiv += `<div><table><caption>${commentData.OriginalPoster}</caption>`;
+                                commentDiv += `<tr><td>Comment</td><td><textarea readonly="readonly">${commentData.Summary}</textarea></td></tr>`;
+                                commentDiv += `<tr><td>Stars: </td><td>${commentData.Stars}</td></tr></table>`;
+                                commentDiv += `<p style="text-indent: 80%">${commentData.CommentDate}</p></div></div>`;
+                                $(currentComment).html(commentDiv);
                             }
-                            else{
-                                if(data[item].StatusVoznje == "FORMIRANA"){
-                                    let komForm = `<div><div>Komentar</div>`;
-                                    let komID = data[item].ID;
-                                    komForm += `<div><textarea cols="40" rows="5" type="text" id="com_${komID}" name="commText"></textarea></div>`;
-                                    komForm += `<div><input type="submit" name="${komID}" id="successful"/><label>Ocena:</label><input id="stars_${komID}" type="number" required min="1" maxlength="1" max="5" range="1"/></div></div>`;
-                                    $('#Komentari' + komID).html(komForm);
+                            else {
+                                if (data[item].Status == "Successful") {
+                                    let CommentForm = `<div style="border-style: inset;left: 30px"><div>Comment</div>`;
+                                    let CommentID = data[item].ID;
+                                    CommentForm += `<div><textarea cols="40" rows="5" type="text" id="Com_${CommentID}" name="CommentText"></textarea></div>`;
+                                    CommentForm += `<div><input type="submit" name="${CommentID}" id="SuccessfulCommentID"/><label>Stars:</label> <input id="starField_${CommentID}" type="number" required="required" min="1" maxlength="1" max="5" range="1"</div></div>`;
+                                    $('#CommentSection' + CommentID).html(CommentForm);
                                 }
-                                if(data[item].StatusVoznje == "OTKAZANA"){
-                                    let komForm = `<div><div>Komentar</div>`;
-                                    let komID = data[item].ID;
-                                    komForm += `<div><textarea cols="40" rows="5" type="text" id="com_${komID}" name="commText"></textarea></div>`;
-                                    komForm += `<div><input type="submit" name="${komID}" id="canceled"/><label>Ocena:</label><input id="stars_${komID}" type="number" required min="1" maxlength="1" max="5" range="1"/></div></div>`;
-                                    $('#Komentari' + komID).html(komForm);
+                                if (data[item].Status == "Canceled") {
+                                    let CommentForm = `<div style="border-style: inset;left: 30px"><div>Comment</div>`;
+                                    let CommentID = data[item].ID;
+                                    CommentForm += `<div><textarea cols="40" rows="5" type="text" id="Com_${CommentID}" name="CommentText"></textarea></div>`;
+                                    CommentForm += `<div><input type="submit" name="${CommentID}" id="CancelCommentID"/><label>Stars:</label> <input id="starField_${CommentID}" type="number" required="required" min="1" maxlength="1" max="5" range="1"</div></div>`;
+                                    $('#CommentSection' + CommentID).html(CommentForm);
                                 }
                             }
                         });
@@ -102,69 +145,53 @@
                 });
             }
 
-            $(document).on('click', '#applyFilter', function(){
-                let data = {
+            $(document).on('click', '#ApplyFilter', function () {
+                let Filterdata = {
                     FilterStatus: $('#statusFilter').val(),
-                    SortDate: $('#sortDate').val(),
-                    SortStars: $('#sortStars').val(),
-                    FromDate: $('#fromDate').val(),
-                    ToDate: $('#toDate').val(),
-                    FromStars: $('#fromStars').val(),
-                    ToStars: $('#toStars').val(),
-                    FromPrice: $('#fromPrice').val(),
-                    ToPrice: $('#toPrice').val(),
-                    FirstNameV: $('#fnVozac').val(),
-                    LastNameV: $('#lnVozac').val(),
-                    FirstNameM: $('#fnMusterija').val(),
-                    LastNameM: $('#lnMusterija').val()
-            }
-            $.post("api/User/", data)
-                .done(function(){
-                    GenerateRides();
-                });
-            });
-            
-        $(document).on('load', function(){
-            GenerateRides();
-        });
-
-            $('#update').click(function () {
-                let data = {
-                    kIme: $('#inputsername').val(),
-                    Lozinka: $('#inputPassword').val(),
-                    Ime: $('#inputName').val(),
-                    Prezime: $('#inputLastname').val(),
-                    Pol: $('#gender').val(),
-                    Jmbg: $('#inputJmbg').val(),
-                    Telefon: $('#inputTelefon').val(),
-                    Email: $('#inputEmail').val()
+                    SortDate: $('#SortDate').val(),
+                    SortGrade: $('#SortGrade').val(),
+                    FromDate: $('#FromDateSearch').val(),
+                    ToDate: $('#ToDateSearch').val(),
+                    FromGrade: $('#FromGradeSearch').val(),
+                    ToGrade: $('#ToGradeSearch').val(),
+                    FromPrice: $('#FromPriceSearch').val(),
+                    ToPrice: $('#ToPriceSearch').val()
                 }
-                $.post("api/User/Update", data)
+                $.post("/api/Client/ApplyFilter", Filterdata)
                     .done(function () {
-                        alert("Promene uspesno sacuvane")
+                        GenerateRides();
+                    });
+            });
+            $(document).on('load', function () {
+                CheckIfBanned();
+                GenerateRides();
+            });
+
+            $.get("/api/Default/getUser", function (data, status) {
+                if (data.LoggedIn == false) {
+                    alert("Please proceed to login");
+                    var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                    window.location.replace(path + "Home/Login");
+                }
+            });
+
+            $('#logoff').click(function () {
+                $.post("/api/Client/Logoff")
+                    .done(function () {
+                        var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                        window.location.replace(path + "Home");
                     })
                     .fail(function () {
-                        alert("Error at updating user")
-                    });
-            });
-            
-            $('p').click(function () {
-                var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                window.location.replace(path + "Main/MusterijaView");
-            });
-
-            $('logoff').click(function(){
-                $.post("api/User/LogOff")
-                    .done(function(){
-                        var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
-                        window.location.replace(path + "Home/Index");
-                    })
-                    .fail(function(){
-                        alert("Error")
+                        alert("Error occured")
                     });
             });
 
-            $('#rides').click(function(){
+            $('#profile').click(function () {
+                 var path = @Html.Raw(HttpUtility.JavaScriptStringEncode(Url.Content("~/"), true));
+                 window.location.replace(path + "Taxi/U");
+            });
+
+            $('#updateRides').click(function () {
                 GenerateRides();
             });
 
@@ -179,8 +206,8 @@
             $(document).on('click', '#SuccessfulCommentID', function () {
                 let data = {
                     ID: $(this).attr('name'),
-                    Opis: $('#Com_' + $(this).attr('name')).val(),
-                    OcenaVoznje: $('#starField_' + $(this).attr('name')).val()
+                    Summary: $('#Com_' + $(this).attr('name')).val(),
+                    Stars: $('#starField_' + $(this).attr('name')).val()
                 }
                 $.post("/api/Client/addComment", data)
                     .done(function (data) {
@@ -201,69 +228,76 @@
                     });
             });
         });
-
     </script>
 </head>
-<body>
-    <button class="accordion" id="profil">Vas profil</button>
-    <div class="panel">
+<body id="Client">
+    <div class="container" align="left">
+        <ul>
+            <li><button class="btn" id="profile">My Profile</button></li>
+            <li><a class="btn" href="~/Taxi/OrderRide">Order Ride</a></li>
+            <li><button class="btn" id="updateRides">My Rides</button></li> 
+            <li><button class="btn" id="logoff">Log Off</button></li>
+        </ul>
+    <hr />
+                <h4>Filters</h4>
         <div class="form-group">
-            <button class="btn btn" id="p">Moj profil</button>
-            <button class="btn btn" id="logoff">Log Off</button>
+            <span>
+                Filter by status:
+                <select id="statusFilter">
+                    <option value="None" selected="selected">None</option>
+                    <option value="Created">Created</option>
+                    <option value="Formated">Formated</option>
+                    <option value="Canceled">Canceled</option>
+                    <option value="Successful">Successful</option>
+                    <option value="Unsuccessful">Unsuccessful</option>
+                </select>
+            </span>
         </div>
+                <br /><hr/>
 
+                <h4>Sort by</h4>
         <div class="form-group">
-            <label>Korisnicko ime:</label>
-            <input type="text" class="form-control" id="inputUsername" value="@Model.kIme" readonly disabled/>
+            <span>
+                Date
+                <select id="SortDate">
+                    <option value="None" selected="selected">None</option>
+                    <option value="Newest">Newest</option>
+                    <option value="Oldest">Oldest</option>
+                </select>
+            </span>
         </div>
+                <br/>
         <div class="form-group">
-            <label>Lozinka:</label>
-            <input type="password" class="form-control" id="inputPassword" value="@Model.Lozinka"/>
+            <span>
+                Stars
+                <select id="SortGrade">
+                    <option value="None" selected="selected">None</option>
+                    <option value="Highest">Highest</option>
+                    <option value="Lowest">Lowest</option>
+                </select>
+            </span>
         </div>
-        <div class="form-group">
-            <label>Ime:</label>
-            <input type="text" class="form-control" id="inputName" value="@Model.Ime"/>
-        </div>
-        <div class="form-group">
-            <label>Prezime:</label>
-            <input type="text" class="form-control" id="inputLastname" value="@Model.Prezime"/>
-        </div>
-        <div class="form-group">
-            <label>Pol:</label>
-            &emsp;
-            <select type="number" name="gender" id="gender" class="form-control input-sm" placeholder="Gender">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>JMBG:</label>
-            <input type="text" class="form-control" id="inputJmbg" value="@Model.Jmbg"/>
-        </div>
-        <div class="form-group">
-            <label>Kontakt telefon:</label>
-            <input type="number" class="form-control" id="inputTelefon" value="@Model.Telefon"/>
-        </div>
-        <div class="form-group">
-            <label>Email:</label>
-            <input type="email" class="form-control" id="inputEmail" value="@Model.Email"/>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Izmeni" id="update" name="update"/>
-            @Html.ActionLink("Back", "Index", "Main", new { @class="btn btn"})
-        </div>
+                <br /><hr/>
+
+                <h4>Search by</h4>
+                <br/>
+                <h5>Order date:</h5>
+        <span>from:<input type="date" id="FromDateSearch" /></span>
+        <br/>
+        <span>to:<input type="date" id="ToDateSearch" /></span>
+                <br/><br/>
+                <h5>Stars:</h5>
+        <span>from:<input type="number" maxlength="1" max="5" min="1" id="FromGradeSearch" /></span>
+        <br/>
+        <span>to:<input type="number" max="5" min="1" maxlength="1" id="ToGradeSearch" /></span>
+                <br /><br/>
+                <h5>Price:</h5>
+        <span>from:<input type="number" id="FromPriceSearch" /></span>
+        <br/>
+        <span>to:<input type="number" id="ToPriceSearch" /></span>
+            <br/><br/><hr/>
+            <button type="submit" class="btn" id="ApplyFilter">Apply</button>
+        <div id="taxiOrders"></div>
     </div>
-
-    <button class="accordion" id="rides">Vase voznje</button>
-    <div class="panel">
-        
-    </div>
-
-
-    <button class="accordion">Narucite voznju</button>
-    <div class="panel">
-        <p>Lorem ipsum...</p>
-    </div>
-
 </body>
 </html>
